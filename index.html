@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Pork Belly: Eternal Stay</title>
+    <style>
+        /* Base Reset & Mobile Fixes */
+        * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
+        body {
+            background-color: #000;
+            color: #fff;
+            font-family: 'Courier New', Courier, monospace;
+            overflow: hidden;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #game-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            max-width: 600px; /* Looks good on mobile and desktop */
+            background-color: #050510;
+            overflow: hidden;
+        }
+
+        /* Screens */
+        .screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: none; /* Hidden by default */
+            flex-direction: column;
+        }
+        .active { display: flex; }
+
+        /* --- MAIN MENU --- */
+        #menu-screen {
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(180deg, #1a1a2e 0%, #0f0f1a 100%);
+        }
+        .menu-title { font-size: 28px; margin-bottom: 40px; color: #a3c2fa; text-shadow: 0 0 10px #4a76a8; text-align: center;}
+        .menu-btn {
+            background: rgba(20, 30, 60, 0.9);
+            border: 2px solid #4a76a8;
+            border-radius: 8px;
+            color: #fff;
+            padding: 15px 30px;
+            font-size: 18px;
+            font-family: inherit;
+            margin: 10px;
+            cursor: pointer;
+            width: 80%;
+            max-width: 300px;
+            transition: 0.2s;
+        }
+        .menu-btn:active { background: #4a76a8; }
+
+        /* --- MINI GAME (POU STYLE) --- */
+        #minigame-screen {
+            background-color: #fce4ec; /* Soft pink bg */
+        }
+        .stats-bar {
+            display: flex;
+            justify-content: space-around;
+            padding: 20px 10px;
+            background: rgba(255,255,255,0.5);
+            border-bottom: 2px solid #f8bbd0;
+        }
+        .stat-container { text-align: center; width: 30%; color: #333; font-weight: bold; font-size: 14px;}
+        .stat-fill-bg {
+            background: #ddd;
+            height: 15px;
+            border-radius: 10px;
+            margin-top: 5px;
+            overflow: hidden;
+            border: 1px solid #999;
+        }
+        .stat-fill {
+            height: 100%;
+            background: #4caf50;
+            width: 100%;
+            transition: width 0.3s;
+        }
+        #mg-character-container {
+            flex-grow: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        #mg-character { width: 60%; max-height: 50vh; object-fit: contain; transition: transform 0.1s;}
+        .mg-actions {
+            display: flex;
+            justify-content: space-around;
+            padding: 20px;
+            background: #fff;
+            border-top: 2px solid #f8bbd0;
+        }
+        .mg-btn {
+            background: #ffb74d;
+            border: none;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            font-size: 24px;
+            box-shadow: 0 4px 0 #f57c00;
+            cursor: pointer;
+        }
+        .mg-btn:active { transform: translateY(4px); box-shadow: 0 0 0 #f57c00; }
+        .back-btn { position: absolute; top: 75px; left: 10px; background: none; border: none; font-size: 16px; font-weight:bold; color: #333; }
+
+        /* --- VISUAL NOVEL --- */
+        #bg-image {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 1;
+        }
+        #crt-overlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            background-size: 100% 4px, 3px 100%; z-index: 5; pointer-events: none;
+        }
+        #vn-character {
+            position: absolute; bottom: 25%; left: 50%; transform: translateX(-50%);
+            width: 70%; max-height: 60vh; object-fit: contain; z-index: 2;
+        }
+        
+        /* VN UI */
+        #choices-container {
+            position: absolute; bottom: 40%; left: 5%; width: 90%;
+            display: flex; flex-direction: column; gap: 10px; z-index: 6; display: none;
+        }
+        .choice-btn {
+            background: rgba(15, 20, 45, 0.95); border: 2px solid #4a76a8; border-radius: 8px;
+            color: #fff; padding: 15px; font-family: inherit; font-size: 14px; text-align: left;
+        }
+
+        #dialogue-wrapper {
+            position: absolute; bottom: 20px; left: 5%; width: 90%; z-index: 10;
+        }
+        #name-tag {
+            position: absolute; top: -30px; left: 15px; background: rgba(15, 20, 45, 0.95);
+            border: 2px solid #4a76a8; border-bottom: none; border-radius: 12px 12px 0 0;
+            padding: 5px 15px; font-weight: bold; font-size: 16px;
+        }
+        #dialogue-box {
+            background: rgba(15, 20, 45, 0.95); border: 2px solid #4a76a8; border-radius: 12px;
+            padding: 20px; min-height: 160px; display: flex; flex-direction: column;
+            justify-content: space-between; cursor: pointer;
+        }
+        #dialogue-text {
+            font-size: 18px; line-height: 1.5; white-space: pre-wrap; flex-grow: 1; text-shadow: 1px 1px 0px #000;
+        }
+        .cursor::after { content: '|'; animation: blink 1s infinite; }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+        #bottom-menu {
+            display: flex; justify-content: space-between; border-top: 1px solid rgba(255, 255, 255, 0.2);
+            padding-top: 10px; margin-top: 10px;
+        }
+        .menu-item { text-align: center; font-size: 12px; color: #aaa; }
+        .menu-item small { display: block; font-size: 9px; margin-top: 2px; }
+
+        .day-overlay {
+            position: absolute; top:0; left:0; width:100%; height:100%;
+            background: black; color: white; display: flex; justify-content: center; align-items: center;
+            font-size: 24px; z-index: 20; opacity: 0; pointer-events: none; transition: opacity 1s;
+        }
+    </style>
+</head>
+<body>
+
+<div id="game-container">
+    
+    <!-- MAIN MENU -->
+    <div id="menu-screen" class="screen active">
+        <div class="menu-title">Pork Belly<br>Eternal Stay</div>
+        <button class="menu-btn" onclick="startVN()">▶ Start Story Mode</button>
+        <button class="menu-btn" onclick="startMinigame()">♥ Take Care of Pork Belly</button>
+    </div>
+
+    <!-- MINIGAME (POU) -->
+    <div id="minigame-screen" class="screen">
+        <div class="stats-bar">
+            <div class="stat-container">Hunger<div class="stat-fill-bg"><div id="bar-hunger" class="stat-fill"></div></div></div>
+            <div class="stat-container">Fun<div class="stat-fill-bg"><div id="bar-fun" class="stat-fill"></div></div></div>
+            <div class="stat-container">Energy<div class="stat-fill-bg"><div id="bar-energy" class="stat-fill"></div></div></div>
+        </div>
+        <button class="back-btn" onclick="goMenu()">← Menu</button>
+        
+        <div id="mg-character-container">
+            <img id="mg-character" src="normal.png" alt="Pork Belly Normal" onerror="this.src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII='">
+        </div>
+
+        <div class="mg-actions">
+            <button class="mg-btn" onclick="mgAction('feed')">🍎</button>
+            <button class="mg-btn" onclick="mgAction('play')">⚽</button>
+            <button class="mg-btn" onclick="mgAction('sleep')">🌙</button>
+        </div>
+    </div>
+
+    <!-- VISUAL NOVEL -->
+    <div id="vn-screen" class="screen">
+        <img id="bg-image" src="background.png" alt="Background" onerror="this.style.backgroundColor='#111'">
+        <img id="vn-character" src="halloween.png" alt="Pork Belly Halloween" onerror="this.style.display='none'">
+        <div id="crt-overlay"></div>
+
+        <div id="day-display" class="day-overlay">Day 1</div>
+
+        <div id="choices-container"></div>
+
+        <div id="dialogue-wrapper">
+            <div id="name-tag">Pork Belly</div>
+            <div id="dialogue-box" onclick="advanceDialogue()">
+                <div id="dialogue-text" class="cursor"></div>
+                <div id="bottom-menu">
+                    <div class="menu-item" onclick="goMenu()">菜单<br><small>(Menu)</small></div>
+                    <div class="menu-item">读档<br><small>(Load)</small></div>
+                    <div class="menu-item">设置<br><small>(Settings)</small></div>
+                    <div class="menu-item">好感<br><small>(Status)</small></div>
+                    <div class="menu-item">自动<br><small>(Auto: OFF)</small></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    /* --- NAVIGATION --- */
+    function hideAllScreens() {
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    }
+    function goMenu() {
+        hideAllScreens();
+        document.getElementById('menu-screen').classList.add('active');
+        clearInterval(mgInterval); // pause minigame drain
+    }
+
+    /* --- MINIGAME LOGIC --- */
+    let mgStats = { hunger: 50, fun: 50, energy: 100 };
+    let mgInterval;
+
+    function startMinigame() {
+        hideAllScreens();
+        document.getElementById('minigame-screen').classList.add('active');
+        updateBars();
+        mgInterval = setInterval(drainStats, 2000);
+    }
+
+    function updateBars() {
+        document.getElementById('bar-hunger').style.width = mgStats.hunger + '%';
+        document.getElementById('bar-fun').style.width = mgStats.fun + '%';
+        document.getElementById('bar-energy').style.width = mgStats.energy + '%';
+        
+        // Change colors if low
+        ['hunger', 'fun', 'energy'].forEach(stat => {
+            let el = document.getElementById('bar-' + stat);
+            if (mgStats[stat] < 30) el.style.background = '#f44336'; // red
+            else if (mgStats[stat] < 60) el.style.background = '#ffeb3b'; // yellow
+            else el.style.background = '#4caf50'; // green
+        });
+    }
+
+    function drainStats() {
+        mgStats.hunger = Math.max(0, mgStats.hunger - 2);
+        mgStats.fun = Math.max(0, mgStats.fun - 2);
+        mgStats.energy = Math.max(0, mgStats.energy - 1);
+        updateBars();
+    }
+
+    function mgAction(type) {
+        let char = document.getElementById('mg-character');
+        char.style.transform = "scale(1.1)";
+        setTimeout(() => char.style.transform = "scale(1)", 150);
+
+        if(type === 'feed') { mgStats.hunger = Math.min(100, mgStats.hunger + 20); mgStats.energy -= 5; }
+        if(type === 'play') { mgStats.fun = Math.min(100, mgStats.fun + 20); mgStats.energy -= 10; }
+        if(type === 'sleep') { mgStats.energy = Math.min(100, mgStats.energy + 40); mgStats.hunger -= 10; }
+        
+        mgStats.energy = Math.max(0, mgStats.energy);
+        mgStats.hunger = Math.max(0, mgStats.hunger);
+        updateBars();
+    }
+
+
+    /* --- VISUAL NOVEL LOGIC --- */
+    const textElement = document.getElementById("dialogue-text");
+    const choicesContainer = document.getElementById("choices-container");
+    const dayOverlay = document.getElementById("day-display");
+
+    let isTyping = false;
+    let typeInterval;
+    let storyMode = 0; // 0: intro, 1: loop
+    let currentDay = 1;
+    let nodeIndex = 0;
+    
+    // The "Long" Story structure
+    let currentScene = [];
+
+    const introScene = [
+        { text: "The rain taps heavily against the glass. You found this old manor seeking shelter." },
+        { text: "And you found... him." },
+        { text: "Can't you just stay with me?" },
+        { text: "Why are you trying to run away?" },
+        { 
+            text: "...", 
+            choices: [
+                { text: "▶ I'll stay with you forever, Pork Belly.", next: "stay" },
+                { text: "▶ I need to check outside and get home.", next: "leave" }
+            ]
+        }
+    ];
+
+    function startVN() {
+        hideAllScreens();
+        document.getElementById('vn-screen').classList.add('active');
+        currentDay = 1;
+        storyMode = 0;
+        nodeIndex = 0;
+        currentScene = introScene;
+        showDayTransition(`Day ${currentDay}`, () => {
+            playNode();
+        });
+    }
+
+    function showDayTransition(text, callback) {
+        dayOverlay.innerText = text;
+        dayOverlay.style.opacity = 1;
+        setTimeout(() => {
+            dayOverlay.style.opacity = 0;
+            setTimeout(callback, 1000);
+        }, 2000);
+    }
+
+    function typeWriter(text, index, callback) {
+        isTyping = true;
+        textElement.innerHTML = text.substring(0, index);
+        if (index < text.length) {
+            typeInterval = setTimeout(() => { typeWriter(text, index + 1, callback); }, 40);
+        } else {
+            isTyping = false;
+            if (callback) callback();
+        }
+    }
+
+    function playNode() {
+        choicesContainer.style.display = "none";
+        choicesContainer.innerHTML = "";
+        
+        let node = currentScene[nodeIndex];
+        if (!node) {
+            // Generate endless days to simulate "3 hours" of gameplay
+            currentDay++;
+            generateDailyLoop();
+            return;
+        }
+
+        typeWriter(node.text, 0, () => {
+            if (node.choices) {
+                setTimeout(() => {
+                    choicesContainer.style.display = "flex";
+                    node.choices.forEach(c => {
+                        let btn = document.createElement("button");
+                        btn.className = "choice-btn";
+                        btn.innerText = c.text;
+                        btn.onclick = (e) => {
+                            e.stopPropagation();
+                            handleChoice(c.next);
+                        };
+                        choicesContainer.appendChild(btn);
+                    });
+                }, 500);
+            }
+        });
+    }
+
+    function advanceDialogue() {
+        let node = currentScene[nodeIndex];
+        if (!node) return;
+
+        if (isTyping) {
+            clearTimeout(typeInterval);
+            textElement.innerHTML = node.text;
+            isTyping = false;
+            if (node.choices) {
+                choicesContainer.style.display = "flex";
+                node.choices.forEach(c => {
+                    let btn = document.createElement("button");
+                    btn.className = "choice-btn";
+                    btn.innerText = c.text;
+                    btn.onclick = (e) => {
+                        e.stopPropagation();
+                        handleChoice(c.next);
+                    };
+                    choicesContainer.appendChild(btn);
+                });
+            }
+        } else {
+            if (!node.choices) {
+                nodeIndex++;
+                playNode();
+            }
+        }
+    }
+
+    function handleChoice(result) {
+        if (result === "stay") {
+            currentScene = [
+                { text: "Good... I promise you won't regret it." },
+                { text: "We have eternity to play." }
+            ];
+        } else if (result === "leave") {
+            currentScene = [
+                { text: "...I can't let you do that." },
+                { text: "The doors are already locked. The key is gone." },
+                { text: "You belong to me now." }
+            ];
+        }
+        nodeIndex = 0;
+        playNode();
+    }
+
+    // Procedural generation to make the game infinitely long
+    function generateDailyLoop() {
+        showDayTransition(`Day ${currentDay}`, () => {
+            let randomQuotes = [
+                "You look so beautiful when you sleep. I watched you all night.",
+                "Did you try the front door again? How cute.",
+                "I made your favorite food. Eat it. All of it.",
+                "Who were you thinking about just now? Was it someone else?",
+                "Don't look out the window. Look at me.",
+                "I hid all the sharp objects today. Just to be safe.",
+                "I love you... I love you... I love you..."
+            ];
+            let quote = randomQuotes[Math.floor(Math.random() * randomQuotes.length)];
+            
+            currentScene = [
+                { text: `(It is Day ${currentDay}. You are still trapped.)` },
+                { text: quote },
+                { 
+                    text: "What will you do today?",
+                    choices: [
+                        { text: "▶ Pat Pork Belly's head", next: "stay" },
+                        { text: "▶ Beg to leave", next: "leave" }
+                    ]
+                }
+            ];
+            nodeIndex = 0;
+            playNode();
+        });
+    }
+
+</script>
+</body>
+</html>

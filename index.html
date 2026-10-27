@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Pork Belly: Eternal Stay</title>
     <style>
-        /* Base Reset & Mobile Fixes */
         * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
         body {
             background-color: #000;
@@ -23,154 +22,95 @@
             position: relative;
             width: 100%;
             height: 100%;
-            max-width: 600px; /* Looks good on mobile and desktop */
+            max-width: 600px; 
             background-color: #050510;
             overflow: hidden;
+            box-shadow: 0 0 20px rgba(0,0,0,0.8);
         }
 
-        /* Screens */
         .screen {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            display: none; /* Hidden by default */
-            flex-direction: column;
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            display: none; flex-direction: column;
         }
         .active { display: flex; }
 
-        /* --- MAIN MENU --- */
+        /* MAIN MENU */
         #menu-screen {
-            justify-content: center;
-            align-items: center;
-            background: linear-gradient(180deg, #1a1a2e 0%, #0f0f1a 100%);
+            justify-content: center; align-items: center;
+            background: linear-gradient(180deg, #0a0a1a 0%, #05050a 100%);
         }
-        .menu-title { font-size: 28px; margin-bottom: 40px; color: #a3c2fa; text-shadow: 0 0 10px #4a76a8; text-align: center;}
+        .menu-title { font-size: 32px; margin-bottom: 40px; color: #a3c2fa; text-shadow: 0 0 15px #4a76a8; text-align: center; font-weight: bold;}
         .menu-btn {
-            background: rgba(20, 30, 60, 0.9);
-            border: 2px solid #4a76a8;
-            border-radius: 8px;
-            color: #fff;
-            padding: 15px 30px;
-            font-size: 18px;
-            font-family: inherit;
-            margin: 10px;
-            cursor: pointer;
-            width: 80%;
-            max-width: 300px;
-            transition: 0.2s;
+            background: rgba(15, 20, 45, 0.9); border: 2px solid #4a76a8; border-radius: 8px;
+            color: #fff; padding: 18px 30px; font-size: 16px; font-family: inherit; margin: 10px;
+            cursor: pointer; width: 85%; max-width: 300px; transition: 0.2s; box-shadow: 0 4px 10px rgba(0,0,0,0.5);
         }
-        .menu-btn:active { background: #4a76a8; }
+        .menu-btn:hover { background: rgba(30, 40, 80, 0.9); }
+        .menu-btn:active { transform: translateY(2px); }
 
-        /* --- MINI GAME (POU STYLE) --- */
-        #minigame-screen {
-            background-color: #fce4ec; /* Soft pink bg */
-        }
-        .stats-bar {
-            display: flex;
-            justify-content: space-around;
-            padding: 20px 10px;
-            background: rgba(255,255,255,0.5);
-            border-bottom: 2px solid #f8bbd0;
-        }
+        /* MINI GAME */
+        #minigame-screen { background-color: #fce4ec; }
+        .stats-bar { display: flex; justify-content: space-around; padding: 20px 10px; background: rgba(255,255,255,0.7); border-bottom: 2px solid #f8bbd0; }
         .stat-container { text-align: center; width: 30%; color: #333; font-weight: bold; font-size: 14px;}
-        .stat-fill-bg {
-            background: #ddd;
-            height: 15px;
-            border-radius: 10px;
-            margin-top: 5px;
-            overflow: hidden;
-            border: 1px solid #999;
-        }
-        .stat-fill {
-            height: 100%;
-            background: #4caf50;
-            width: 100%;
-            transition: width 0.3s;
-        }
-        #mg-character-container {
-            flex-grow: 1;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
+        .stat-fill-bg { background: #ddd; height: 15px; border-radius: 10px; margin-top: 5px; overflow: hidden; border: 1px solid #999; }
+        .stat-fill { height: 100%; background: #4caf50; width: 100%; transition: width 0.3s; }
+        #mg-character-container { flex-grow: 1; display: flex; justify-content: center; align-items: center; position: relative;}
         #mg-character { width: 60%; max-height: 50vh; object-fit: contain; transition: transform 0.1s;}
-        .mg-actions {
-            display: flex;
-            justify-content: space-around;
-            padding: 20px;
-            background: #fff;
-            border-top: 2px solid #f8bbd0;
-        }
-        .mg-btn {
-            background: #ffb74d;
-            border: none;
-            border-radius: 50%;
-            width: 60px;
-            height: 60px;
-            font-size: 24px;
-            box-shadow: 0 4px 0 #f57c00;
-            cursor: pointer;
-        }
-        .mg-btn:active { transform: translateY(4px); box-shadow: 0 0 0 #f57c00; }
-        .back-btn { position: absolute; top: 75px; left: 10px; background: none; border: none; font-size: 16px; font-weight:bold; color: #333; }
+        .mg-actions { display: flex; justify-content: space-around; padding: 25px; background: #fff; border-top: 2px solid #f8bbd0; box-shadow: 0 -4px 10px rgba(0,0,0,0.05);}
+        .mg-btn { background: #ffb74d; border: none; border-radius: 50%; width: 70px; height: 70px; font-size: 28px; box-shadow: 0 5px 0 #f57c00; cursor: pointer; transition: 0.1s;}
+        .mg-btn:active { transform: translateY(5px); box-shadow: 0 0 0 #f57c00; }
+        .back-btn { position: absolute; top: 80px; left: 15px; background: rgba(255,255,255,0.8); border: 2px solid #f8bbd0; padding: 5px 10px; border-radius: 5px; font-size: 14px; font-weight:bold; color: #333; z-index: 10; cursor: pointer;}
 
-        /* --- VISUAL NOVEL --- */
-        #bg-image {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 1;
-        }
+        /* VISUAL NOVEL */
+        #bg-image { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 1; transition: filter 2s;}
         #crt-overlay {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
             background-size: 100% 4px, 3px 100%; z-index: 5; pointer-events: none;
+            box-shadow: inset 0 0 50px rgba(0,0,0,0.8);
         }
-        #vn-character {
-            position: absolute; bottom: 25%; left: 50%; transform: translateX(-50%);
-            width: 70%; max-height: 60vh; object-fit: contain; z-index: 2;
-        }
+        #vn-character { position: absolute; bottom: 22%; left: 50%; transform: translateX(-50%); width: 75%; max-height: 65vh; object-fit: contain; z-index: 2; transition: opacity 0.5s; }
         
-        /* VN UI */
         #choices-container {
-            position: absolute; bottom: 40%; left: 5%; width: 90%;
-            display: flex; flex-direction: column; gap: 10px; z-index: 6; display: none;
+            position: absolute; bottom: 42%; left: 5%; width: 90%;
+            display: flex; flex-direction: column; gap: 12px; z-index: 6; display: none;
         }
         .choice-btn {
-            background: rgba(15, 20, 45, 0.95); border: 2px solid #4a76a8; border-radius: 8px;
-            color: #fff; padding: 15px; font-family: inherit; font-size: 14px; text-align: left;
+            background: rgba(10, 15, 35, 0.95); border: 2px solid #4a76a8; border-radius: 8px;
+            color: #fff; padding: 18px; font-family: inherit; font-size: 15px; text-align: left; cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.6); transition: 0.2s;
         }
+        .choice-btn:hover { background: rgba(30, 45, 80, 0.95); }
 
-        #dialogue-wrapper {
-            position: absolute; bottom: 20px; left: 5%; width: 90%; z-index: 10;
-        }
+        #dialogue-wrapper { position: absolute; bottom: 20px; left: 5%; width: 90%; z-index: 10; }
         #name-tag {
-            position: absolute; top: -30px; left: 15px; background: rgba(15, 20, 45, 0.95);
+            position: absolute; top: -30px; left: 15px; background: rgba(10, 15, 35, 0.95);
             border: 2px solid #4a76a8; border-bottom: none; border-radius: 12px 12px 0 0;
-            padding: 5px 15px; font-weight: bold; font-size: 16px;
+            padding: 6px 18px; font-weight: bold; font-size: 17px; box-shadow: 0 -2px 10px rgba(0,0,0,0.5);
         }
         #dialogue-box {
-            background: rgba(15, 20, 45, 0.95); border: 2px solid #4a76a8; border-radius: 12px;
-            padding: 20px; min-height: 160px; display: flex; flex-direction: column;
-            justify-content: space-between; cursor: pointer;
+            background: rgba(10, 15, 35, 0.95); border: 2px solid #4a76a8; border-radius: 12px;
+            padding: 22px; min-height: 170px; display: flex; flex-direction: column;
+            justify-content: space-between; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.7);
         }
-        #dialogue-text {
-            font-size: 18px; line-height: 1.5; white-space: pre-wrap; flex-grow: 1; text-shadow: 1px 1px 0px #000;
-        }
+        #dialogue-text { font-size: 19px; line-height: 1.6; white-space: pre-wrap; flex-grow: 1; text-shadow: 1px 1px 0px #000; }
+        
         .cursor::after { content: '|'; animation: blink 1s infinite; }
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
 
-        #bottom-menu {
-            display: flex; justify-content: space-between; border-top: 1px solid rgba(255, 255, 255, 0.2);
-            padding-top: 10px; margin-top: 10px;
-        }
-        .menu-item { text-align: center; font-size: 12px; color: #aaa; }
-        .menu-item small { display: block; font-size: 9px; margin-top: 2px; }
+        #bottom-menu { display: flex; justify-content: space-between; border-top: 1px solid rgba(255, 255, 255, 0.15); padding-top: 12px; margin-top: 12px; }
+        .menu-item { text-align: center; font-size: 13px; color: #888; cursor: pointer; transition: 0.2s;}
+        .menu-item:hover { color: #fff; }
+        .menu-item small { display: block; font-size: 10px; margin-top: 3px; color: #555;}
 
-        .day-overlay {
+        /* ENDING OVERLAY */
+        #ending-screen {
             position: absolute; top:0; left:0; width:100%; height:100%;
-            background: black; color: white; display: flex; justify-content: center; align-items: center;
-            font-size: 24px; z-index: 20; opacity: 0; pointer-events: none; transition: opacity 1s;
+            background: #000; color: white; display: flex; flex-direction: column; justify-content: center; align-items: center;
+            z-index: 20; opacity: 0; pointer-events: none; transition: opacity 2s; text-align: center; padding: 20px;
         }
+        #ending-title { font-size: 30px; color: #ff4a4a; margin-bottom: 20px; font-weight: bold;}
+        #ending-text { font-size: 18px; line-height: 1.5; color: #ccc;}
     </style>
 </head>
 <body>
@@ -179,43 +119,41 @@
     
     <!-- MAIN MENU -->
     <div id="menu-screen" class="screen active">
-        <div class="menu-title">Pork Belly<br>Eternal Stay</div>
+        <div class="menu-title">PORK BELLY<br><span style="font-size: 20px; color: #666;">Eternal Stay</span></div>
         <button class="menu-btn" onclick="startVN()">▶ Start Story Mode</button>
-        <button class="menu-btn" onclick="startMinigame()">♥ Take Care of Pork Belly</button>
+        <button class="menu-btn" onclick="startMinigame()">♥ Care For Him</button>
     </div>
 
-    <!-- MINIGAME (POU) -->
+    <!-- MINIGAME -->
     <div id="minigame-screen" class="screen">
         <div class="stats-bar">
             <div class="stat-container">Hunger<div class="stat-fill-bg"><div id="bar-hunger" class="stat-fill"></div></div></div>
             <div class="stat-container">Fun<div class="stat-fill-bg"><div id="bar-fun" class="stat-fill"></div></div></div>
             <div class="stat-container">Energy<div class="stat-fill-bg"><div id="bar-energy" class="stat-fill"></div></div></div>
         </div>
-        <button class="back-btn" onclick="goMenu()">← Menu</button>
+        <button class="back-btn" onclick="goMenu()">← Return</button>
         
         <div id="mg-character-container">
-            <img id="mg-character" src="normal.png" alt="Pork Belly Normal" onerror="this.src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII='">
+            <img id="mg-character" src="normal.png" alt="Pork Belly">
         </div>
 
         <div class="mg-actions">
             <button class="mg-btn" onclick="mgAction('feed')">🍎</button>
-            <button class="mg-btn" onclick="mgAction('play')">⚽</button>
+            <button class="mg-btn" onclick="mgAction('play')">🧶</button>
             <button class="mg-btn" onclick="mgAction('sleep')">🌙</button>
         </div>
     </div>
 
     <!-- VISUAL NOVEL -->
     <div id="vn-screen" class="screen">
-        <img id="bg-image" src="background.png" alt="Background" onerror="this.style.backgroundColor='#111'">
-        <img id="vn-character" src="halloween.png" alt="Pork Belly Halloween" onerror="this.style.display='none'">
+        <img id="bg-image" src="background.png" alt="Haunted Background">
+        <img id="vn-character" src="halloween.png" alt="Halloween Cat">
         <div id="crt-overlay"></div>
-
-        <div id="day-display" class="day-overlay">Day 1</div>
 
         <div id="choices-container"></div>
 
         <div id="dialogue-wrapper">
-            <div id="name-tag">Pork Belly</div>
+            <div id="name-tag" id="speaker-name">Pork Belly</div>
             <div id="dialogue-box" onclick="advanceDialogue()">
                 <div id="dialogue-text" class="cursor"></div>
                 <div id="bottom-menu">
@@ -223,26 +161,33 @@
                     <div class="menu-item">读档<br><small>(Load)</small></div>
                     <div class="menu-item">设置<br><small>(Settings)</small></div>
                     <div class="menu-item">好感<br><small>(Status)</small></div>
-                    <div class="menu-item">自动<br><small>(Auto: OFF)</small></div>
+                    <div class="menu-item">跳过<br><small>(Skip)</small></div>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- ENDING SCREEN -->
+    <div id="ending-screen">
+        <div id="ending-title">ENDING UNLOCKED</div>
+        <div id="ending-text">...</div>
+        <button class="menu-btn" style="margin-top:40px;" onclick="location.reload()">Main Menu</button>
+    </div>
+
 </div>
 
 <script>
-    /* --- NAVIGATION --- */
+    /* ---------------------- NAVIGATION ---------------------- */
     function hideAllScreens() {
         document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
     }
     function goMenu() {
         hideAllScreens();
         document.getElementById('menu-screen').classList.add('active');
-        clearInterval(mgInterval); // pause minigame drain
+        clearInterval(mgInterval); 
     }
 
-    /* --- MINIGAME LOGIC --- */
+    /* ---------------------- MINIGAME ---------------------- */
     let mgStats = { hunger: 50, fun: 50, energy: 100 };
     let mgInterval;
 
@@ -250,7 +195,7 @@
         hideAllScreens();
         document.getElementById('minigame-screen').classList.add('active');
         updateBars();
-        mgInterval = setInterval(drainStats, 2000);
+        mgInterval = setInterval(drainStats, 1500);
     }
 
     function updateBars() {
@@ -258,91 +203,243 @@
         document.getElementById('bar-fun').style.width = mgStats.fun + '%';
         document.getElementById('bar-energy').style.width = mgStats.energy + '%';
         
-        // Change colors if low
         ['hunger', 'fun', 'energy'].forEach(stat => {
             let el = document.getElementById('bar-' + stat);
-            if (mgStats[stat] < 30) el.style.background = '#f44336'; // red
-            else if (mgStats[stat] < 60) el.style.background = '#ffeb3b'; // yellow
-            else el.style.background = '#4caf50'; // green
+            if (mgStats[stat] < 30) el.style.background = '#f44336'; 
+            else if (mgStats[stat] < 60) el.style.background = '#ffeb3b'; 
+            else el.style.background = '#4caf50'; 
         });
     }
 
     function drainStats() {
-        mgStats.hunger = Math.max(0, mgStats.hunger - 2);
-        mgStats.fun = Math.max(0, mgStats.fun - 2);
-        mgStats.energy = Math.max(0, mgStats.energy - 1);
+        mgStats.hunger = Math.max(0, mgStats.hunger - 1);
+        mgStats.fun = Math.max(0, mgStats.fun - 1);
+        mgStats.energy = Math.max(0, mgStats.energy - 0.5);
         updateBars();
     }
 
     function mgAction(type) {
         let char = document.getElementById('mg-character');
-        char.style.transform = "scale(1.1)";
+        char.style.transform = "scale(1.15)";
         setTimeout(() => char.style.transform = "scale(1)", 150);
 
-        if(type === 'feed') { mgStats.hunger = Math.min(100, mgStats.hunger + 20); mgStats.energy -= 5; }
-        if(type === 'play') { mgStats.fun = Math.min(100, mgStats.fun + 20); mgStats.energy -= 10; }
-        if(type === 'sleep') { mgStats.energy = Math.min(100, mgStats.energy + 40); mgStats.hunger -= 10; }
+        if(type === 'feed') { mgStats.hunger = Math.min(100, mgStats.hunger + 25); mgStats.energy -= 2; }
+        if(type === 'play') { mgStats.fun = Math.min(100, mgStats.fun + 25); mgStats.energy -= 5; }
+        if(type === 'sleep') { mgStats.energy = Math.min(100, mgStats.energy + 50); mgStats.hunger -= 5; }
         
         mgStats.energy = Math.max(0, mgStats.energy);
         mgStats.hunger = Math.max(0, mgStats.hunger);
         updateBars();
     }
 
-
-    /* --- VISUAL NOVEL LOGIC --- */
+    /* ---------------------- VISUAL NOVEL STORY ENGINE ---------------------- */
     const textElement = document.getElementById("dialogue-text");
     const choicesContainer = document.getElementById("choices-container");
-    const dayOverlay = document.getElementById("day-display");
+    const nameTag = document.getElementById("name-tag");
+    const vnChar = document.getElementById("vn-character");
 
     let isTyping = false;
     let typeInterval;
-    let storyMode = 0; // 0: intro, 1: loop
-    let currentDay = 1;
-    let nodeIndex = 0;
-    
-    // The "Long" Story structure
-    let currentScene = [];
+    let currentNodeId = "start";
+    let currentLineIndex = 0;
 
-    const introScene = [
-        { text: "The rain taps heavily against the glass. You found this old manor seeking shelter." },
-        { text: "And you found... him." },
-        { text: "Can't you just stay with me?" },
-        { text: "Why are you trying to run away?" },
-        { 
-            text: "...", 
+    // The Deep Story Tree
+    const storyData = {
+        "start": {
+            speaker: "",
+            lines: [
+                "The rain taps heavily against the cracked glass.",
+                "You found this old, rotting manor in the woods seeking shelter from the storm.",
+                "But you were not alone here. You found... him."
+            ],
+            next: "meet_pork"
+        },
+        "meet_pork": {
+            speaker: "Pork Belly",
+            lines: [
+                "Can't you just stay with me?",
+                "Why are you trying to run away?",
+                "The woods outside are so cold and dangerous..."
+            ],
             choices: [
-                { text: "▶ I'll stay with you forever, Pork Belly.", next: "stay" },
-                { text: "▶ I need to check outside and get home.", next: "leave" }
+                { text: "▶ I'll stay with you forever, Pork Belly.", target: "stay_1" },
+                { text: "▶ I need to check outside and get home.", target: "leave_1" }
             ]
+        },
+
+        // --- PATH: TRY TO LEAVE ---
+        "leave_1": {
+            speaker: "Pork Belly",
+            lines: [
+                "...I can't let you do that.",
+                "His large eyes gleam with a faint, unnatural purple light.",
+                "The heavy oak doors suddenly slam shut on their own. A magical lock clicks heavily into place.",
+                "You belong to me now. My last master left me... you won't."
+            ],
+            choices: [
+                { text: "▶ Try to force the door open", target: "force_door" },
+                { text: "▶ Apologize and back away carefully", target: "explore_manor" }
+            ]
+        },
+        "force_door": {
+            speaker: "",
+            lines: [
+                "You grab the handle and pull with all your might. It won't budge.",
+                "Pork Belly tilts his head, watching you struggle with an eerie calmness.",
+                "[Pork Belly]: 'It's reinforced with blood magic. Human strength is useless here.'",
+                "You realize you need to find another way out, or a way to break the spell."
+            ],
+            next: "explore_manor"
+        },
+        "explore_manor": {
+            speaker: "",
+            lines: [
+                "You step away from the entrance. The manor is huge, filled with cobwebs and strange artifacts.",
+                "Pork Belly floats gently behind you, trailing you like a shadow."
+            ],
+            choices: [
+                { text: "▶ Search the dusty Library", target: "library_1" },
+                { text: "▶ Investigate the Kitchen", target: "kitchen_1" }
+            ]
+        },
+        "library_1": {
+            speaker: "",
+            lines: [
+                "The library smells of rotting parchment. Books are scattered everywhere.",
+                "You find a journal on a pedestal. The cover reads: 'Properties of Familiars'.",
+                "[Pork Belly]: 'You shouldn't read that. It's boring... pay attention to me instead.'"
+            ],
+            choices: [
+                { text: "▶ Read the journal anyway", target: "read_journal" },
+                { text: "▶ Put it down and pet him", target: "pet_in_library" }
+            ]
+        },
+        "read_journal": {
+            speaker: "",
+            lines: [
+                "You open the journal. A passage catches your eye:",
+                "'To sever the bond of a familiar gone mad, one must find their true name, or destroy their anchor.'",
+                "Suddenly, the book bursts into purple flames in your hands! You drop it.",
+                "[Pork Belly]: 'I told you it was boring. Don't look for things that will take you away from me.'"
+            ],
+            next: "confrontation"
+        },
+        "pet_in_library": {
+            speaker: "Pork Belly",
+            lines: [
+                "You gently pat his hat. He leans into your hand, purring loudly. The sound vibrates through the floorboards.",
+                "Good human. I'll make sure you're very comfortable here.",
+                "You realize he is completely starved for affection. Maybe you can use this."
+            ],
+            choices: [
+                { text: "▶ Keep petting him (Submit)", target: "ending_pet" },
+                { text: "▶ Trick him into sleeping", target: "trick_sleep" }
+            ]
+        },
+        "kitchen_1": {
+            speaker: "",
+            lines: [
+                "You enter the kitchen. There are rusty knives on the counter and a strange cauldron bubbling over a cold fire.",
+                "[Pork Belly]: 'Are you hungry? I can make you a stew. The last master taught me... before he disappeared.'"
+            ],
+            choices: [
+                { text: "▶ Accept the food", target: "eat_food" },
+                { text: "▶ Grab a rusty knife", target: "grab_knife" }
+            ]
+        },
+        "eat_food": {
+            speaker: "",
+            lines: [
+                "He pours a thick, glowing pink sludge into a bowl.",
+                "You take a bite. It tastes like ash and sugar. Suddenly, your vision blurs.",
+                "[Pork Belly]: 'Sleep now. When you wake up, you won't even want to leave.'"
+            ],
+            next: "ending_pet"
+        },
+        "grab_knife": {
+            speaker: "",
+            lines: [
+                "You snatch the knife from the counter and point it at him.",
+                "Pork Belly doesn't blink. He just stares at the blade.",
+                "[Pork Belly]: 'That won't hurt me. But it makes me very... very sad that you would try.'"
+            ],
+            next: "ending_death"
+        },
+        "confrontation": {
+            speaker: "Pork Belly",
+            lines: [
+                "The room grows freezing cold. The shadows on the wall stretch and contort.",
+                "I just wanted someone to love me. Why does everyone try to leave?",
+                "If you won't stay willingly... I'll have to make you into a doll. Dolls don't run away."
+            ],
+            choices: [
+                { text: "▶ I'll stay! I promise!", target: "ending_pet" },
+                { text: "▶ (Throw a lantern at him and run!)", target: "ending_death" },
+                { text: "▶ Wait! I know your True Name!", target: "ending_master" } // Requires reading journal context
+            ]
+        },
+        "trick_sleep": {
+            speaker: "",
+            lines: [
+                "You sing a soft lullaby. Slowly, Pork Belly's large eyes droop.",
+                "He lands on a velvet cushion and falls into a deep, magical slumber.",
+                "You quietly slip away, finding an open window in the attic. You climb down the vines into the rainy night."
+            ],
+            next: "ending_escape"
+        },
+
+        // --- PATH: STAY WILLINGLY ---
+        "stay_1": {
+            speaker: "Pork Belly",
+            lines: [
+                "You will? Really?",
+                "His eyes widen with pure joy. The ominous pressure in the room vanishes.",
+                "I promise you won't regret it. We have eternity to play.",
+                "Time begins to blur. Days turn into weeks."
+            ],
+            choices: [
+                { text: "▶ Accept your new life", target: "ending_pet" },
+                { text: "▶ Ask him to teach you magic", target: "ending_master" }
+            ]
+        },
+
+        // --- ENDINGS ---
+        "ending_pet": {
+            speaker: "",
+            lines: ["Your memories of the outside world fade away. You sit in the manor, day after day, petting the cat."],
+            action: () => triggerEnding("ENDING 1/4: THE PERFECT PET", "You submitted completely. You will never leave this house, but you will never be lonely again.")
+        },
+        "ending_death": {
+            speaker: "",
+            lines: ["The shadows consume you. The last thing you hear is the sound of a bell ringing... and a cat crying."],
+            action: () => triggerEnding("ENDING 2/4: SHATTERED GLASS", "You angered the familiar. Your soul now powers the magical locks on the front door.")
+        },
+        "ending_escape": {
+            speaker: "",
+            lines: ["You run into the woods, not looking back. You survived... but sometimes, at night, you hear a faint purring outside your bedroom window."],
+            action: () => triggerEnding("ENDING 3/4: THE ESCAPE", "You got away. But he knows your scent now. Sleep with one eye open.")
+        },
+        "ending_master": {
+            speaker: "",
+            lines: ["You assert dominance over the familiar's magic. The manor recognizes you as the new master.", "[Pork Belly]: 'Master... I will serve you forever.'"],
+            action: () => triggerEnding("ENDING 4/4: THE NEW MASTER", "You didn't escape the haunted manor... you conquered it.")
         }
-    ];
+    };
+
 
     function startVN() {
         hideAllScreens();
         document.getElementById('vn-screen').classList.add('active');
-        currentDay = 1;
-        storyMode = 0;
-        nodeIndex = 0;
-        currentScene = introScene;
-        showDayTransition(`Day ${currentDay}`, () => {
-            playNode();
-        });
-    }
-
-    function showDayTransition(text, callback) {
-        dayOverlay.innerText = text;
-        dayOverlay.style.opacity = 1;
-        setTimeout(() => {
-            dayOverlay.style.opacity = 0;
-            setTimeout(callback, 1000);
-        }, 2000);
+        currentNodeId = "start";
+        currentLineIndex = 0;
+        playNode();
     }
 
     function typeWriter(text, index, callback) {
         isTyping = true;
         textElement.innerHTML = text.substring(0, index);
         if (index < text.length) {
-            typeInterval = setTimeout(() => { typeWriter(text, index + 1, callback); }, 40);
+            typeInterval = setTimeout(() => { typeWriter(text, index + 1, callback); }, 30); // text speed
         } else {
             isTyping = false;
             if (callback) callback();
@@ -353,107 +450,104 @@
         choicesContainer.style.display = "none";
         choicesContainer.innerHTML = "";
         
-        let node = currentScene[nodeIndex];
-        if (!node) {
-            // Generate endless days to simulate "3 hours" of gameplay
-            currentDay++;
-            generateDailyLoop();
-            return;
+        let node = storyData[currentNodeId];
+        
+        // Update Speaker Name
+        if (node.speaker === "") {
+            nameTag.style.display = "none";
+            textElement.style.fontStyle = "italic";
+            textElement.style.color = "#ccc";
+        } else {
+            nameTag.style.display = "block";
+            nameTag.innerText = node.speaker || "Pork Belly";
+            textElement.style.fontStyle = "normal";
+            textElement.style.color = "#fff";
         }
 
-        typeWriter(node.text, 0, () => {
-            if (node.choices) {
-                setTimeout(() => {
+        let currentText = node.lines[currentLineIndex];
+
+        typeWriter(currentText, 0, () => {
+            // If it's the last line of the node, show choices or auto-advance indicator
+            if (currentLineIndex === node.lines.length - 1) {
+                if (node.choices) {
+                    setTimeout(() => {
+                        choicesContainer.style.display = "flex";
+                        node.choices.forEach(c => {
+                            let btn = document.createElement("button");
+                            btn.className = "choice-btn";
+                            btn.innerText = c.text;
+                            btn.onclick = (e) => {
+                                e.stopPropagation();
+                                currentNodeId = c.target;
+                                currentLineIndex = 0;
+                                playNode();
+                            };
+                            choicesContainer.appendChild(btn);
+                        });
+                    }, 300);
+                } else if (node.next) {
+                    // There is a forced next node, indicated by user click
+                } else if (node.action) {
+                    // Ending trigger
+                    setTimeout(node.action, 1500);
+                }
+            }
+        });
+    }
+
+    function advanceDialogue() {
+        let node = storyData[currentNodeId];
+        
+        // Skip typing effect
+        if (isTyping) {
+            clearTimeout(typeInterval);
+            textElement.innerHTML = node.lines[currentLineIndex];
+            isTyping = false;
+            
+            if (currentLineIndex === node.lines.length - 1) {
+                if (node.choices) {
                     choicesContainer.style.display = "flex";
+                    choicesContainer.innerHTML = "";
                     node.choices.forEach(c => {
                         let btn = document.createElement("button");
                         btn.className = "choice-btn";
                         btn.innerText = c.text;
                         btn.onclick = (e) => {
                             e.stopPropagation();
-                            handleChoice(c.next);
+                            currentNodeId = c.target;
+                            currentLineIndex = 0;
+                            playNode();
                         };
                         choicesContainer.appendChild(btn);
                     });
-                }, 500);
+                } else if (node.action) {
+                    setTimeout(node.action, 1000);
+                }
             }
-        });
-    }
+            return;
+        }
 
-    function advanceDialogue() {
-        let node = currentScene[nodeIndex];
-        if (!node) return;
-
-        if (isTyping) {
-            clearTimeout(typeInterval);
-            textElement.innerHTML = node.text;
-            isTyping = false;
-            if (node.choices) {
-                choicesContainer.style.display = "flex";
-                node.choices.forEach(c => {
-                    let btn = document.createElement("button");
-                    btn.className = "choice-btn";
-                    btn.innerText = c.text;
-                    btn.onclick = (e) => {
-                        e.stopPropagation();
-                        handleChoice(c.next);
-                    };
-                    choicesContainer.appendChild(btn);
-                });
-            }
+        // If not typing, go to next line if available
+        if (currentLineIndex < node.lines.length - 1) {
+            currentLineIndex++;
+            playNode();
         } else {
-            if (!node.choices) {
-                nodeIndex++;
+            // If at the end of lines and there's a 'next' node
+            if (node.next) {
+                currentNodeId = node.next;
+                currentLineIndex = 0;
                 playNode();
             }
+            // If there are choices, clicking does nothing (must click choice)
         }
     }
 
-    function handleChoice(result) {
-        if (result === "stay") {
-            currentScene = [
-                { text: "Good... I promise you won't regret it." },
-                { text: "We have eternity to play." }
-            ];
-        } else if (result === "leave") {
-            currentScene = [
-                { text: "...I can't let you do that." },
-                { text: "The doors are already locked. The key is gone." },
-                { text: "You belong to me now." }
-            ];
-        }
-        nodeIndex = 0;
-        playNode();
-    }
-
-    // Procedural generation to make the game infinitely long
-    function generateDailyLoop() {
-        showDayTransition(`Day ${currentDay}`, () => {
-            let randomQuotes = [
-                "You look so beautiful when you sleep. I watched you all night.",
-                "Did you try the front door again? How cute.",
-                "I made your favorite food. Eat it. All of it.",
-                "Who were you thinking about just now? Was it someone else?",
-                "Don't look out the window. Look at me.",
-                "I hid all the sharp objects today. Just to be safe.",
-                "I love you... I love you... I love you..."
-            ];
-            let quote = randomQuotes[Math.floor(Math.random() * randomQuotes.length)];
-            
-            currentScene = [
-                { text: `(It is Day ${currentDay}. You are still trapped.)` },
-                { text: quote },
-                { 
-                    text: "What will you do today?",
-                    choices: [
-                        { text: "▶ Pat Pork Belly's head", next: "stay" },
-                        { text: "▶ Beg to leave", next: "leave" }
-                    ]
-                }
-            ];
-            nodeIndex = 0;
-            playNode();
-        });
+    function triggerEnding(title, desc) {
+        let overlay = document.getElementById("ending-screen");
+        document.getElementById("ending-title").innerText = title;
+        document.getElementById("ending-text").innerText = desc;
+        overlay.style.pointerEvents = "auto";
+        overlay.style.opacity = 1;
     }
 
 </script>
